@@ -15,32 +15,16 @@
 #   limitations under the License.
 #
 
-  - include: prepare.yml
-    tags: prepare
+#  - name: install rsync
+#    yum: name=rsync state=latest
+  - name: Clean up old scripts
+    file: path=/tmp/cis_scripts state=absent
 
-  - include: section_01.yml
-    tags: section1
+  - name: Create the scripts folder
+    file: path=/tmp/cis_scripts state=directory mode=0755
 
-  - include: section_02.yml
-    tags: section2
-
-  - include: section_03.yml
-    tags: section3
-
-  - include: section_04.yml
-    tags: section4
-
-  - include: section_05.yml
-    tags: section5
-
-  - include: section_06.yml
-    tags: section6
-
-  - include: section_07.yml
-    tags: section7
-
-  - include: section_08.yml
-    tags: section8
-
-  - include: section_09.yml
-    tags: section9
+  - name: Transfer the scripts
+#    synchronize: src=files/cis_scripts dest=/tmp/cis_scripts/
+    copy: src=files/cis_scripts dest=/tmp/ directory_mode=yes mode=755
+    tags:
+      - prepare
