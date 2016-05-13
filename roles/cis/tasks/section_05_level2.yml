@@ -97,6 +97,7 @@
       backrefs=yes
       regexp="(^\s*kernel.*)$(?<!audit=1)"
       line="\1 audit=1"
+    ignore_errors: yes
     tags:
       - scored
       - section5.2

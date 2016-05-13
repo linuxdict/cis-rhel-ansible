@@ -192,7 +192,7 @@
       - section9.2.5
 
   - name: 9.2.6 Ensure root PATH Integrity (Scored)
-    script: /tmp/cis_scripts/9.2.6.check_root_path_integrity.sh
+    shell: /tmp/cis_scripts/9.2.6.check_root_path_integrity.sh
     register: result9_2_6
     failed_when: result9_2_6.rc != 0
     changed_when: result9_2_6.rc != 0
@@ -204,7 +204,7 @@
       - section9.2.6
 
   - name: 9.2.7 Check Permissions on User Home Directories (Scored)
-    script: /tmp/cis_scripts/9.2.7.check_user_home_directory.sh
+    shell: /tmp/cis_scripts/9.2.7.check_user_home_directory.sh
     register: result9_2_7
     failed_when: "result9_2_7.stdout"
     always_run: yes
@@ -215,7 +215,7 @@
       - section9.2.7
 
   - name: 9.2.8 Check User Dot File Permissions (Scored)
-    script: /tmp/cis_scripts/9.2.8.ensure_user_dot_file.sh
+    shell: /tmp/cis_scripts/9.2.8.ensure_user_dot_file.sh
     register: result9_2_8
     failed_when: result9_2_8.rc != 0
     changed_when: result9_2_8.rc != 0
@@ -227,7 +227,7 @@
       - section9.2.8
 
   - name: 9.2.9 Check Permissions on User .netrc Files (Scored)
-    script: /tmp/cis_scripts/9.2.9.ensure_user_netrc_perm.sh
+    shell: /tmp/cis_scripts/9.2.9.ensure_user_netrc_perm.sh
     register: result9_2_9
     failed_when: "result9_2_9.stdout" 
     changed_when: result9_2_9.rc != 0
@@ -239,7 +239,7 @@
       - section9.2.9
 
   - name: 9.2.10 Check for Presence of User .rhosts Files (Scored)
-    script: /tmp/cis_scripts/9.2.10.ensure_no_rhosts.sh
+    shell: /tmp/cis_scripts/9.2.10.ensure_no_rhosts.sh
     register: result9_2_10
     failed_when: "result9_2_10.stdout" 
     changed_when: result9_2_10.rc != 0
@@ -251,7 +251,7 @@
       - section9.2.10
 
   - name: 9.2.11 Check Groups in /etc/passwd (Scored)
-    script: /tmp/cis_scripts/9.2.11.ensure_groups_exists.sh
+    shell: /tmp/cis_scripts/9.2.11.ensure_groups_exists.sh
     register: result9_2_11
     failed_when: "result9_2_11.stdout" 
     changed_when: result9_2_11.rc != 0
@@ -270,7 +270,7 @@
       - section9.2.12
 
   - name: 9.2.13 Check User Home Directory Ownership (Scored)
-    script: /tmp/cis_scripts/9.2.13.check_user_home_perm.sh
+    shell: /tmp/cis_scripts/9.2.13.check_user_home_perm.sh
     register: result9_2_13
     failed_when: "result9_2_13.stdout"
     always_run: yes
@@ -281,7 +281,7 @@
       - section9.2.13
 
   - name: 9.2.14 Check for Duplicate UIDs (Scored)
-    script: /tmp/cis_scripts/9.2.14.ensure_no_duplicate_uid.sh
+    shell: /tmp/cis_scripts/9.2.14.ensure_no_duplicate_uid.sh
     register: result9_2_14
     failed_when: "result9_2_14.stdout"
     always_run: yes

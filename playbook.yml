@@ -16,7 +16,7 @@
 #
 
 - hosts: all
-  accelerate: true
-  user: root
+#  accelerate: true
+  user: centos
   roles:
     - cis 

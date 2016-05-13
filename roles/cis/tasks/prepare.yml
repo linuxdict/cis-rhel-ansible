@@ -21,10 +21,28 @@
     file: path=/tmp/cis_scripts state=absent
 
   - name: Create the scripts folder
-    file: path=/tmp/cis_scripts state=directory mode=0755
+    file: path=/tmp/cis_scripts/v2.0 state=directory mode=0755
 
   - name: Transfer the scripts
 #    synchronize: src=files/cis_scripts dest=/tmp/cis_scripts/
     copy: src=files/cis_scripts dest=/tmp/ directory_mode=yes mode=755
     tags:
       - prepare
+  
+#  - name: Backup the files changes in /etc/ 
+#	script: etc/z/backup_preHarden.sh
+#    tags:
+#      - backup
+
+  - name: Backup the files changes in /etc/ 
+    shell: > 
+      for i in 
+      fstab sysctl.conf yum.conf grub.conf ntp.conf  inittab crontab
+      sysconfig/init security/limits.conf sysconfig/network 
+      ssh/sshd_config pam.d/system-auth pam.d/password-auth
+      pam.d/su hosts.allow hosts.deny rsyslog.conf login.defs
+      motd issue issue.net ;
+      do cp /etc/$i /etc/$i.preHarden;done
+    register: backup.etc
+    tags:
+      - backup

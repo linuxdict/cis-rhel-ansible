@@ -183,6 +183,7 @@
     command: readlink -f /etc/grub.conf
     register: readlink
     changed_when: false
+    ignore_errors: yes
     always_run: yes
     tags:
       - scored
@@ -194,6 +195,7 @@
       path={{ readlink.stdout }}
       owner=root
       group=root
+    ignore_errors: yes
     tags:
       - scored
       - section1.5
@@ -204,6 +206,7 @@
     register: readlink
     changed_when: false
     always_run: yes
+    ignore_errors: yes
     tags:
       - scored
       - section1.5
@@ -213,6 +216,7 @@
     file: >
       path={{ readlink.stdout }}
       mode=0400
+    ignore_errors: yes
     tags:
       - scored 
       - section1.5
@@ -269,6 +273,7 @@
       value=1
       state=present
       ignoreerrors=yes
+    when: ansible_distribution_major_version == "6"
     tags:
       - scored
       - section1.6
