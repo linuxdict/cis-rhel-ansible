@@ -15,22 +15,13 @@
 #   limitations under the License.
 #
 
-  - name: Clean up old scripts
+  - name: Clean up harden scripts
     file: path=/tmp/cis_scripts state=absent
     tags:
-      - prepare
+      - rollback
 
-  - name: Create the scripts folder
-    file: path=/tmp/cis_scripts/v2.0 state=directory mode=0755
-    tags:
-      - prepare
 
-  - name: Transfer the scripts
-    copy: src=files/cis_scripts dest=/tmp/ directory_mode=yes mode=755
-    tags:
-      - prepare
-  
-  - name: Backup the files changes in /etc/ 
+  - name: Rollback the files changes in /etc/ 
     shell: > 
       for i in 
       fstab sysctl.conf yum.conf grub.conf ntp.conf  inittab crontab
@@ -38,7 +29,16 @@
       ssh/sshd_config pam.d/system-auth pam.d/password-auth
       pam.d/su hosts.allow hosts.deny rsyslog.conf login.defs
       motd issue issue.net ;
-      do cp /etc/$i /etc/$i.preHarden;done
-    register: backup.etc
+      do cp /etc/$i.preHarden /etc/$i ;done
     tags:
-      - backup
+      - rollback
+
+  - name: Remove the files which added by harden
+    file: path=/etc/modprobe.d/CIS.conf state=absent
+    tags: 
+      - rollback
+
+  - name: Warning reboot
+    debug: msg="Please manually reboot server to make thing restored!!"
+    tags: 
+      - rollback
