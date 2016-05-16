@@ -1,0 +1,44 @@
+---
+#
+# Copyright 2014 Major Hayden
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+
+  - name: Clean up harden scripts
+    file: path=/tmp/cis_scripts state=absent
+    tags:
+      - rollback
+
+
+  - name: Rollback the files changes in /etc/ 
+    shell: > 
+      for i in 
+      fstab sysctl.conf yum.conf grub.conf ntp.conf  inittab crontab
+      sysconfig/init security/limits.conf sysconfig/network selinux/config
+      ssh/sshd_config pam.d/system-auth pam.d/password-auth
+      pam.d/su hosts.allow hosts.deny rsyslog.conf login.defs
+      motd issue issue.net ;
+      do cp /etc/$i.preHarden /etc/$i ;done
+    tags:
+      - rollback
+
+  - name: Remove the files which added by harden
+    file: path=/etc/modprobe.d/CIS.conf state=absent
+    tags: 
+      - rollback
+
+  - name: Warning reboot
+    debug: msg="Please manually reboot server to make thing restored!!"
+    tags: 
+      - rollback

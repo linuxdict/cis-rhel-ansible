@@ -1,0 +1,44 @@
+---
+#
+# Copyright 2014 Major Hayden
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+
+  - name: Clean up old scripts
+    file: path=/tmp/cis_scripts state=absent
+    tags:
+      - prepare
+
+  - name: Create the scripts folder
+    file: path=/tmp/cis_scripts/v2.0 state=directory mode=0755
+    tags:
+      - prepare
+
+  - name: Transfer the scripts
+    copy: src=files/cis_scripts dest=/tmp/ directory_mode=yes mode=755
+    tags:
+      - prepare
+  
+  - name: Backup the files changes in /etc/ 
+    shell: > 
+      for i in 
+      fstab sysctl.conf yum.conf grub.conf ntp.conf  inittab crontab
+      sysconfig/init security/limits.conf sysconfig/network selinux/config
+      ssh/sshd_config pam.d/system-auth pam.d/password-auth
+      pam.d/su hosts.allow hosts.deny rsyslog.conf login.defs
+      motd issue issue.net ;
+      do cp /etc/$i /etc/$i.preHarden;done
+    register: backup.etc
+    tags:
+      - backup
