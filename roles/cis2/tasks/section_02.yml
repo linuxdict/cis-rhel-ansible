@@ -20,7 +20,3 @@
       - section2
       - level1
 
-  - include: section_02_level2.yml
-    tags:
-      - section2
-      - level2

@@ -18,5 +18,8 @@
 - hosts: all
 #  accelerate: true
   user: centos
+  vars: 
+    default_auid: 1000
+    company_name: Linuxdict
   roles:
     - cis2
