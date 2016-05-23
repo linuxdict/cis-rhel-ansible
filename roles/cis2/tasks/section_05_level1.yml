@@ -86,17 +86,17 @@
       - section5.2
       - section5.2.1
 
-  - name: 6.2.1 Set SSH Protocol to 2 (Scored)
+  - name: 5.2.2 Ensure SSH Protocol is set to 2 (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^Protocol " line="Protocol 2"
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.1
+      - section5.2
+      - section5.2.2
 
-  - name: 6.2.2 Set LogLevel to INFO (Scored)
+  - name: 5.2.3 Ensure SSH LogLevel is set to INFO (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^LogLevel "
@@ -104,11 +104,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.2
+      - section5.2
+      - section5.2.3
 
-
-  - name: 6.2.4 Disable SSH X11 Forwarding (Scored)
+  - name: 5.2.4 Ensure SSH X11 forwarding is disabled (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^X11Forwarding "
@@ -116,10 +115,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.4
+      - section5.2
+      - section5.2.4
 
-  - name: 6.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
+  - name: 5.2.5 Ensure SSH MaxAuthTries is set to 4 or less (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^MaxAuthTries "
@@ -127,10 +126,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.5
+      - section5.2
+      - section5.2.5
 
-  - name: 6.2.6 Set SSH IgnoreRhosts to Yes (Scored)
+  - name: 5.2.6 Ensure SSH IgnoreRhosts is enabled (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^IgnoreRhosts "
@@ -138,10 +137,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.6
+      - section5.2
+      - section5.2.6
 
-  - name: 6.2.7 Set SSH HostbasedAuthentication to No (Scored)
+  - name: 5.2.7 Ensure SSH HostbasedAuthentication is disabled (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^HostbasedAuthentication "
@@ -149,10 +148,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.7
+      - section5.2
+      - section5.2.7
 
-  - name: 6.2.8 Disable SSH Root Login (Scored)
+  - name: 5.2.8 Ensure SSH root login is disabled (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^PermitRootLogin "
@@ -160,10 +159,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.8
+      - section5.2
+      - section5.2.8
 
-  - name: 6.2.9 Set SSH PermitEmptyPasswords to No (Scored)
+  - name: 5.2.9 Ensure SSH PermitEmptyPasswords is disabled (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^PermitEmptyPasswords "
@@ -171,10 +170,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.9
+      - section5.2
+      - section5.2.9
 
-  - name: 6.2.10 Do Not Allow Users to Set Environment Options (Scored)
+  - name: 5.2.10 Ensure SSH PermitUserEnvironment is disabled (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^PermitUserEnvironment "
@@ -182,10 +181,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.10
+      - section5.2
+      - section5.2.10
 
-  - name: 6.2.11 Use Only Approved Cipher in Counter Mode (Scored)
+  - name: 5.2.11 Ensure only approved ciphers are used (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^Ciphers "
@@ -193,10 +192,21 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.11
+      - section5.2
+      - section5.2.11
 
-  - name: 6.2.12 Set Idle Timeout Interval for User Login (Scored)
+  - name: 5.2.12 Ensure only approved MAC algorithms are used (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^MACs "
+      line="MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
+      - section5.2.12
+
+  - name: 5.2.13 Ensure SSH Idle Timeout Interval is configured (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^ClientAliveInterval "
@@ -204,10 +214,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.12
+      - section5.2
+      - section5.2.13
 
-  - name: 6.2.12 Set Idle Timeout Interval for User Login (Scored)
+  - name: 5.2.13 Ensure SSH Idle Timeout Interval is configured (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^ClientAliveCountMax "
@@ -215,10 +225,21 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.12
+      - section5.2
+      - section5.2.13
 
-  - name: 6.2.13 Limit Access via SSH (Scored)
+  - name: 5.2.14 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^LoginGraceTime "
+      line="LoginGraceTime 60"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
+      - section5.2.14
+
+  - name: 5.2.15 Ensure SSH access is limited (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^AllowGroups "
@@ -227,10 +248,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.13
+      - section5.2
+      - section5.2.15
 
-  - name: 6.2.13 Limit Access via SSH (Scored)
+  - name: 5.2.15 Ensure SSH access is limited (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config 
       regexp="^AllowUsers "
@@ -239,10 +260,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.13
+      - section5.2
+      - section5.2.15
 
-  - name: 6.2.13 Limit Access via SSH (Scored)
+  - name: 5.2.15 Ensure SSH access is limited (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^DenyGroups "
@@ -251,10 +272,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.13
+      - section5.2
+      - section5.2.15
 
-  - name: 6.2.13 Limit Access via SSH (Scored)
+  - name: 5.2.15 Ensure SSH access is limited (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^DenyUsers "
@@ -263,10 +284,10 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.13
+      - section5.2
+      - section5.2.15
 
-  - name: 6.2.14 Set SSH Banner (Scored)
+  - name: 5.2.16 Ensure SSH warning banner is configured (Scored)
     lineinfile: >
       dest=/etc/ssh/sshd_config
       regexp="^Banner "
@@ -274,63 +295,172 @@
     notify: Reload sshd
     tags:
       - scored
-      - section6.2
-      - section6.2.14
+      - section5.2
+      - section5.2.16
 
-  - name: 6.3.1 Ensure authconfig package is installed
+  - name: 5.3 Ensure authconfig package is installed
     yum:
       name: authconfig
       state: present
 
-  - name: 6.3.1 Upgrade Password Hashing Algorithm to SHA-512 (Scored)
-    shell: 'authconfig --test | grep hashing'
-    register: password_hash_algorithm
-    always_run: yes
+  - name: 5.3.1 Ensure password creation requirements are configured (Scored)
+    copy: >
+      src=etc/pwquality.conf
+      dest=/etc/security/pwquality.conf
+    when: ansible_distribution_major_version == "7"
     tags:
       - scored
-      - section6.3
-      - section6.3.1
+      - section5.3
+      - section5.3.1
 
-  - name: 6.3.1 Upgrade Password Hashing Algorithm to SHA-512 (Scored)
-    shell: authconfig --passalgo=sha512 --update
-    when: '"sha512" not in password_hash_algorithm.stdout'
-    tags:
-      - scored
-      - section6.3
-      - section6.3.1
-
-  - name: 6.3.2 - 6.3.4 Configure PAM (Scored)
+  - name: 5.3.1 - 5.3.4 Configure PAM (Scored)
     copy: >
       src=etc/pam.d/system-auth
       dest=/etc/pam.d/system-auth
+    when: ansible_distribution_major_version == "6"
     tags:
       - scored
-      - section6.3
-      - section6.3.2
-      - section6.3.3
-      - section6.3.4
+      - section5.3
+      - section5.3.1
+      - section5.3.2
+      - section5.3.3
+      - section5.3.4
 
-  - name: 6.3.2 - 6.3.4 Configure PAM (Scored)
+  - name: 5.3.2 - 5.3.4 Configure PAM (Scored)
     copy: >
       src=etc/pam.d/password-auth
       dest=/etc/pam.d/password-auth
+    when: ansible_distribution_major_version == "6"
     tags:
       - scored
-      - section6.3
-      - section6.3.2
-      - section6.3.3
-      - section6.3.4
+      - section5.3
+      - section5.3.1
+      - section5.3.2
+      - section5.3.3
+      - section5.3.4
 
-  - name: 6.4 Restrict root login to system console (Not Scored)
-    debug: msg="Too restrictive for most environments."
+  - name: 5.4.1.1 Ensure password expiration is 90 days or less (Scored)
+    lineinfile: >
+      backup=yes
+      state=present
+      dest=/etc/login.defs
+      backrefs=yes
+      regexp="^PASS_MAX_DAYS\s+"
+      line="PASS_MAX_DAYS\t90"
     tags:
-      - notscored
-      - section6.4
+      - scored
+      - section5.4
+      - section5.4.1
+      - section5.4.1.1
 
-  - name: 6.5 Restrict Access to the su Command (Scored)
+  - name: 5.4.1.2 Ensure minimum days between password changes is 7 or more (Scored)
+    lineinfile: >
+      backup=yes
+      state=present
+      dest=/etc/login.defs
+      backrefs=yes
+      regexp="^PASS_MIN_DAYS\s+"
+      line="PASS_MIN_DAYS\t7"
+    tags:
+      - scored
+      - section5.4
+      - section5.4.1
+      - section5.4.1.2
+
+  - name: 5.4.1.3 Ensure password expiration warning days is 7 or more (Scored)
+    lineinfile: >
+      backup=yes
+      state=present
+      dest=/etc/login.defs
+      backrefs=yes
+      regexp="^PASS_WARN_AGE\s+"
+      line="PASS_WARN_AGE\t7"
+    tags:
+      - scored
+      - section5.4
+      - section5.4.1
+      - section5.4.1.3
+
+  - name: 5.4.1.4 Ensure inactive password lock is 30 days or less (Scored)
+    command: /usr/sbin/useradd -D -f 30
+    when: lock_inactive
+    tags:
+      - scored
+      - section5.4
+      - section5.4.1
+      - section5.4.1.4
+
+  - name: 5.4.2 Ensure system accounts are non-login for RHEL6 (Scored)
+    shell: awk -F':' '($3<500 && $1!="root" && $1!="sync" && $1!="shutdown" && $1!="sync" && $1!="shutdown" && $1!="halt" && $7!="/sbin/nologin") { print $1 }' /etc/passwd
+    register: enabled_system_accounts
+    when: ansible_distribution_major_version == "6"
+    changed_when: false
+    tags:
+      - scored
+      - section5.4
+      - section5.4.2
+
+  - name: 5.4.2 Ensure system accounts are non-login for RHEL6 (Scored)
+    command: /usr/sbin/usermod -s /sbin/nologin {{ item }}
+    with_items: enabled_system_accounts.stdout_lines
+    when: ansible_distribution_major_version == "6"
+    tags:
+      - scored
+      - section5.4
+      - section5.4.2
+
+  - name: 5.4.2 Ensure system accounts are non-login for RHEL7 (Scored)
+    shell: awk -F':' '($3<1000 && $1!="root" && $1!="sync" && $1!="shutdown" && $1!="sync" && $1!="shutdown" && $1!="halt" && $7!="/sbin/nologin") { print $1 }' /etc/passwd
+    register: enabled_system_accounts
+    when: ansible_distribution_major_version == "7"
+    changed_when: false
+    tags:
+      - scored
+      - section5.4
+      - section5.4.2
+
+  - name: 5.4.2 Ensure system accounts are non-login for RHEL7 (Scored)
+    command: /usr/sbin/usermod -s /sbin/nologin {{ item }}
+    with_items: enabled_system_accounts.stdout_lines
+    when: ansible_distribution_major_version == "7"
+    tags:
+      - scored
+      - section5.4
+      - section5.4.2
+
+  - name: 5.4.3 Ensure default group for the root account is GID 0 (Scored)
+    shell: /bin/awk -F':' '($3 == 0) { print $1 }' /etc/passwd | grep  'root'
+    register: result5_4_3
+    failed_when: result5_4_3.rc != 0
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - section5.4
+      - section5.4.3
+
+  - name: 5.4.4 Ensure default user umask is 027 or more restrictive (Scored)
+    debug: msg="*** Update it later"
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - section5.4
+      - section5.4.4
+
+  - name: 5.5 Ensure root login is restricted to system console (Not Scored)
+    debug: msg="*** Update it later"
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - section5.5
+
+  - name: 5.6 Ensure access to the su command is restricted (Scored)
     copy: >
       src=etc/pam.d/su
       dest=/etc/pam.d/su
+    when: ansible_distribution_major_version == "6"
     tags:
       - scored
-      - section6.5
+      - section5.6

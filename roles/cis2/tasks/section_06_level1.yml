@@ -15,401 +15,300 @@
 #   limitations under the License.
 #
 
-  - name: 6.1.1 Enable anacron Daemon (Scored)
-    yum: >
-      name=cronie-anacron
-      state=present
+  - name: 6.0.1 Clean up old scripts
+    file: path=/opt/cis_scripts state=absent
     tags:
-      - scored
-      - section6.1
-      - section6.1.1
+      - section6.0
 
-  - name: 6.1.2 Enable crond Daemon (Scored)
-    service: >
-      name=crond
-      enabled=yes
-      state=started
+  - name: Create the scripts folder
+    file: path=/opt/cis_scripts/ state=directory mode=0755
+    tags:
+      - section6.0
+
+  - name: Transfer the scripts
+    copy: src=files/cis_scripts dest=/opt/ directory_mode=yes mode=755
+    tags:
+      - section6.0
+
+  - name: 6.1.2 6.1.4  Verify Permissions on /etc/passwd,/etc/group (Scored)
+    file: >
+      path=/etc/{{ item }}
+      owner=root
+      group=root
+      mode=0644
+    with_items: 
+      - passwd
+      - group
     tags:
       - scored
       - section6.1
       - section6.1.2
+      - section6.1.4
 
-  - name: 6.1.3 Set User/Group Owner and Permission on /etc/anacrontab (Scored)
+  - name: 6.1.3 6.1.5 Ensure permissions on /etc/shadow, /etc/gshadow are configured (Scored)
     file: >
-      path=/etc/anacrontab
+      path=/etc/{{ item }}
       owner=root
       group=root
-      mode=0600
+      mode=0000
+    with_items: 
+      - shadow
+      - gshadow
     tags:
       - scored
       - section6.1
       - section6.1.3
-
-  - name: 6.1.4 Set User/Group Owner and Permission on /etc/crontab (Scored)
-    file: >
-      path=/etc/crontab
-      owner=root
-      group=root
-      mode=0600
-    tags:
-      - scored
-      - section6.1
-      - section6.1.4
-
-  - name: 6.1.5 Set User/Group Owner and Permission on /etc/cron.hourly (Scored)
-    file: >
-      path=/etc/cron.hourly
-      owner=root
-      group=root
-      mode=0600
-    tags:
-      - scored
-      - section6.1
       - section6.1.5
 
-  - name: 6.1.6 Set User/Group Owner and Permission on /etc/cron.daily  (Scored)
+  - name: 6.1.6-9 Ensure permissions on /etc/passwd-, /etc/shadow-, /etc/group- are configured (Scored)
     file: >
-      path=/etc/cron.daily
+      path=/etc/{{ item }}
       owner=root
       group=root
       mode=0600
+    with_items: 
+      - passwd-
+      - shadow-
+      - group-
+      - gshadow-
     tags:
       - scored
       - section6.1
       - section6.1.6
-
-  - name: 6.1.7 Set User/Group Owner and Permission on /etc/cron.weekly  (Scored)
-    file: >
-      path=/etc/cron.weekly
-      owner=root
-      group=root
-      mode=0600
-    tags:
-      - scored
-      - section6.1
       - section6.1.7
-
-  - name: 6.1.8 Set User/Group Owner and Permission on /etc/cron.monthly (Scored)
-    file: >
-      path=/etc/cron.monthly
-      owner=root
-      group=root
-      mode=0600
-    tags:
-      - scored
-      - section6.1
       - section6.1.8
 
-  - name: 6.1.9 Set User/Group Owner and Permission on /etc/cron.d (Scored)
-    file: >
-      path=/etc/cron.d
-      state=directory
-      owner=root
-      group=root
-      mode=0700
-    tags:
-      - scored
-      - section6.1
-      - section6.1.9
-
-  - name: 6.1.10 Restrict at Daemon (Scored)
-    file: >
-      path=/etc/at.deny
-      state=absent
+  - name: 6.1.10-14 Ensure no world writable files exist (Scored)
+    debug: msg="*** Update it later"
     tags:
       - scored
       - section6.1
       - section6.1.10
-
-  - name: 6.1.10 Restrict at Daemon (Scored)
-    file: >
-      path=/etc/at.allow
-      state=touch
-      owner=root
-      group=root
-      mode=0600
-    tags:
-      - scored
-      - section6.1
-      - section6.1.10
-
-  - name: 6.1.11 Restrict at/cron to Authorized Users (Scored)
-    file: >
-      path=/etc/cron.deny
-      state=absent
-    tags:
-      - scored
-      - section6.1
       - section6.1.11
+      - section6.1.12
+      - section6.1.13
+      - section6.1.14
 
-  - name: 6.1.11 Restrict at/cron to Authorized Users (Scored)
-    file: >
-      path=/etc/cron.allow
-      state=touch
-      owner=root
-      group=root
-      mode=0600
-    tags:
-      - scored
-      - section6.1
-      - section6.1.11
-
-  - name: 6.2.1 Set SSH Protocol to 2 (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^Protocol " line="Protocol 2"
-    notify: Reload sshd
+  - name: 6.2.1 Ensure password fields are not empty (Scored)
+    shell: /bin/cat /etc/shadow | /bin/awk -F':' '($2 == "" ) { print $1 " does not have a password "}'
+    register: result6_2_1
+    changed_when: "result6_2_1.stdout"
+    always_run: yes
     tags:
       - scored
       - section6.2
       - section6.2.1
 
-  - name: 6.2.2 Set LogLevel to INFO (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^LogLevel "
-      line="LogLevel INFO"
-    notify: Reload sshd
+  - name: 6.2.2 Ensure no legacy "+" entries exist in /etc/passwd (Scored)
+    shell: /bin/grep '^+:' /etc/passwd
+    register: result6_2_2
+    failed_when: result6_2_2.rc == 0
+    changed_when: result6_2_2.rc == 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
       - section6.2
       - section6.2.2
 
-  - name: 6.2.3 Set Permissions on /etc/ssh/sshd_config (Scored)
-    file: >
-      path=/etc/ssh/sshd_config
-      owner=root
-      group=root
-      mode=0600
-    notify: Reload sshd
+  - name: 6.2.3 Ensure no legacy "+" entries exist in /etc/shadow (Scored)
+    shell: /bin/grep '^+:' /etc/shadow
+    register: result6_2_3
+    failed_when: result6_2_3.rc == 0
+    changed_when: result6_2_3.rc == 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
       - section6.2
       - section6.2.3
 
-  - name: 6.2.4 Disable SSH X11 Forwarding (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^X11Forwarding "
-      line="X11Forwarding no"
-    notify: Reload sshd
+  - name: 6.2.4 Ensure no legacy "+" entries exist in /etc/group (Scored)
+    shell: /bin/grep '^+:' /etc/group
+    register: result6_2_4
+    failed_when: result6_2_4.rc == 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
       - section6.2
       - section6.2.4
 
-  - name: 6.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^MaxAuthTries "
-      line="MaxAuthTries 4"
-    notify: Reload sshd
+  - name: 6.2.5 Ensure root is the only UID 0 account (Scored)
+    shell: /bin/awk -F':' '($3 == 0) { print $1 }' /etc/passwd | grep -qx 'root'
+    register: result6_2_5
+    failed_when: result6_2_5.rc != 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.5
 
-  - name: 6.2.6 Set SSH IgnoreRhosts to Yes (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^IgnoreRhosts "
-      line="IgnoreRhosts yes"
-    notify: Reload sshd
+  - name: 6.2.6 Ensure root PATH Integrity (Scored)
+    shell: /opt/cis_scripts/6.2.6.check_root_path_integrity.sh
+    register: result6_2_6
+    failed_when: result6_2_6.rc != 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.6
 
-  - name: 6.2.7 Set SSH HostbasedAuthentication to No (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^HostbasedAuthentication "
-      line="HostbasedAuthentication no"
-    notify: Reload sshd
+  - name: 6.2.7 Ensure all users home directories exist (Scored)
+    shell: /opt/cis_scripts/6.2.7.check_user_home_directory.sh
+    register: result6_2_7
+    failed_when: "result6_2_7.stdout"
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.7
 
-  - name: 6.2.8 Disable SSH Root Login (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^PermitRootLogin "
-      line="PermitRootLogin no"
-    notify: Reload sshd
+  - name: 6.2.8 Ensure users home directories permissions are 750 or more restrictive (Scored)
+    shell: /opt/cis_scripts/6.2.8.check_user_home_perm.sh
+    register: result6_2_8
+    failed_when: "result6_2_8.stdout"
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.8
 
-  - name: 6.2.9 Set SSH PermitEmptyPasswords to No (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^PermitEmptyPasswords "
-      line="PermitEmptyPasswords no"
-    notify: Reload sshd
+  - name: 6.2.9 Ensure users own their home directories (Scored)
+    shell: /opt/cis_scripts/6.2.9.ensure_user_own_their_home.sh
+    register: result6_2_9
+    failed_when: "result6_2_9.stdout"
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.9
 
-  - name: 6.2.10 Do Not Allow Users to Set Environment Options (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^PermitUserEnvironment "
-      line="PermitUserEnvironment no"
-    notify: Reload sshd
+  - name: 6.2.10 Ensure users dot files are not group or world writable (Scored)
+    shell: /opt/cis_scripts/6.2.10.ensure_user_dot_file.sh
+    register: result6_2_10
+    failed_when: "result6_2_10.stdout"
+    changed_when: result6_2_10.rc != 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.10
 
-  - name: 6.2.11 Use Only Approved Cipher in Counter Mode (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^Ciphers "
-      line="Ciphers aes128-ctr,aes192-ctr,aes256-ctr"
-    notify: Reload sshd
+  - name: 6.2.11 Ensure no users have .forward files (Scored)
+    shell: /opt/cis_scripts/6.2.11.ensure_no_forward.sh
+    register: result6_2_11
+    failed_when: "result6_2_11.stdout"
+    changed_when: result6_2_11.rc != 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.11
 
-  - name: 6.2.12 Set Idle Timeout Interval for User Login (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^ClientAliveInterval "
-      line="ClientAliveInterval 300"
-    notify: Reload sshd
+  - name: 6.2.12 Ensure no users have .netrc files (Scored)
+    shell: /opt/cis_scripts/6.2.12.ensure_no_netrc.sh
+    register: result6_2_12
+    failed_when: "result6_2_12.stdout"
+    changed_when: result6_2_12.rc != 0
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
+      - check-only
       - section6.2
       - section6.2.12
 
-  - name: 6.2.12 Set Idle Timeout Interval for User Login (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^ClientAliveCountMax "
-      line="ClientAliveCountMax 0"
-    notify: Reload sshd
+  - name: 6.2.13 Ensure users .netrc Files are not group or world accessible (Scored)
+    shell: /opt/cis_scripts/6.2.13.ensure_user_netrc_perm.sh
+    register: result6_2_13
+    failed_when: "result6_2_13.stdout"
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
-      - section6.2
-      - section6.2.12
-
-  - name: 6.2.13 Limit Access via SSH (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^AllowGroups "
-      line="AllowGroups {{ ssh_allow_groups }}"
-    when: ssh_allow_groups is defined
-    notify: Reload sshd
-    tags:
-      - scored
+      - check-only
       - section6.2
       - section6.2.13
 
-  - name: 6.2.13 Limit Access via SSH (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config 
-      regexp="^AllowUsers "
-      line="AllowUsers {{ ssh_allow_users }}"
-    when: ssh_allow_users is defined
-    notify: Reload sshd
+  - name: 6.2.14 Ensure no users have .rhosts files (Scored)
+    shell: /opt/cis_scripts/6.2.14.ensure_no_rhosts.sh
+    register: result6_2_14
+    failed_when: "result6_2_14.stdout"
+    always_run: yes
+    ignore_errors: yes
     tags:
       - scored
-      - section6.2
-      - section6.2.13
-
-  - name: 6.2.13 Limit Access via SSH (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^DenyGroups "
-      line="DenyGroups {{ ssh_deny_groups }}"
-    when: ssh_deny_groups is defined
-    notify: Reload sshd
-    tags:
-      - scored
-      - section6.2
-      - section6.2.13
-
-  - name: 6.2.13 Limit Access via SSH (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^DenyUsers "
-      line="DenyUsers {{ ssh_deny_users }}"
-    when: ssh_deny_users is defined
-    notify: Reload sshd
-    tags:
-      - scored
-      - section6.2
-      - section6.2.13
-
-  - name: 6.2.14 Set SSH Banner (Scored)
-    lineinfile: >
-      dest=/etc/ssh/sshd_config
-      regexp="^Banner "
-      line="Banner /etc/issue.net"
-    notify: Reload sshd
-    tags:
-      - scored
+      - check-only
       - section6.2
       - section6.2.14
 
-  - name: 6.3.1 Ensure authconfig package is installed
-    yum:
-      name: authconfig
-      state: present
+  - name: 6.2.15 Ensure all groups in /etc/passwd exist in /etc/group (Scored)
+    shell: /opt/cis_scripts/6.2.15.ensure_groups_exists.sh
+    register: result6_2_15
+    failed_when: "result6_2_15.stdout"
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - check-only
+      - section6.2
+      - section6.2.15
 
-  - name: 6.3.1 Upgrade Password Hashing Algorithm to SHA-512 (Scored)
-    shell: 'authconfig --test | grep hashing'
-    register: password_hash_algorithm
+  - name: 6.2.16 Ensure no duplicate UIDs exist (Scored)
+    shell: /opt/cis_scripts/6.2.16.ensure_no_duplicate_uid.sh
+    register: result6_2_16
+    failed_when: "result6_2_16.stdout"
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - check-only
+      - section6.2
+      - section6.2.16
+
+  - name: 6.2.17 Ensure no duplicate GIDs exist (Scored)
+    shell: for dupeID in  $(cut -f3 -d":" /etc/group | sort | uniq -c | sort -n | awk ' $1 > 1 {print $2}'); do awk -F':' -v dupeid=$dupeID '$3 == dupeid {print $1}' /etc/group   ; done
+    register: result6_2_17
+    changed_when: "result6_2_17.stdout"
     always_run: yes
     tags:
       - scored
-      - section6.3
-      - section6.3.1
+      - check-only
+      - section6.2
+      - section6.2.17
 
-  - name: 6.3.1 Upgrade Password Hashing Algorithm to SHA-512 (Scored)
-    shell: authconfig --passalgo=sha512 --update
-    when: '"sha512" not in password_hash_algorithm.stdout'
+  - name: 6.2.18 Ensure no duplicate user names exist (Scored)
+    shell: cut -f1 -d':' /etc/passwd | sort | uniq -c | sort -n | awk ' $1 > 1 {print $2}'
+    register: result6_2_18
+    changed_when: "result6_2_18.stdout"
+    always_run: yes
     tags:
       - scored
-      - section6.3
-      - section6.3.1
+      - check-only
+      - section6.2
+      - section6.2.18
 
-  - name: 6.3.2 - 6.3.4 Configure PAM (Scored)
-    copy: >
-      src=etc/pam.d/system-auth
-      dest=/etc/pam.d/system-auth
+  - name: 6.2.19 Ensure no duplicate group names exist (Scored)
+    shell: cut -f1 -d':' /etc/group | sort | uniq -c | sort -n | awk ' $1 > 1 {print $2}'
+    register: result6_2_19
+    changed_when: "result6_2_19.stdout"
+    always_run: yes
     tags:
       - scored
-      - section6.3
-      - section6.3.2
-      - section6.3.3
-      - section6.3.4
-
-  - name: 6.3.2 - 6.3.4 Configure PAM (Scored)
-    copy: >
-      src=etc/pam.d/password-auth
-      dest=/etc/pam.d/password-auth
-    tags:
-      - scored
-      - section6.3
-      - section6.3.2
-      - section6.3.3
-      - section6.3.4
-
-  - name: 6.4 Restrict root login to system console (Not Scored)
-    debug: msg="Too restrictive for most environments."
-    tags:
-      - notscored
-      - section6.4
-
-  - name: 6.5 Restrict Access to the su Command (Scored)
-    copy: >
-      src=etc/pam.d/su
-      dest=/etc/pam.d/su
-    tags:
-      - scored
-      - section6.5
+      - check-only
+      - section6.2
+      - section6.2.19

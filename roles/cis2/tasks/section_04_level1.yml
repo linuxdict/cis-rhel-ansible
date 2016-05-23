@@ -108,7 +108,7 @@
       - section4.2.1.5
 
   - name: 4.2.2 Configure syslog-ng
-    command: rpm -q syslog-ng
+    shell: rpm -q syslog-ng
     register: syslog_ng_check
     ignore_errors: yes
     tags:
@@ -143,7 +143,7 @@
       - section4.2.2.2
 
   - name: 4.2.2.3 Ensure syslog-ng default file permissions configured (Scored)
-    debug: "*** Will do it later"
+    debug: msg="*** Will do it later"
     when: syslog_ng_check.rc == 0
     tags:
       - notscored
@@ -152,7 +152,7 @@
       - section4.2.2.3
 
   - name: 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host (Not Scored)
-    debug: "*** Will do it later"
+    debug: msg="*** Will do it later"
     when: syslog_ng_check.rc == 0
     tags:
       - notscored
@@ -161,7 +161,7 @@
       - section4.2.2.4
 
   - name: 4.2.2.5 Ensure remote syslog-ng messages are only accepted on designated log hosts (Not Scored)
-    debug: "*** Will do it later"
+    debug: msg="*** Will do it later"
     when: syslog_ng_check.rc == 0
     tags:
       - notscored
@@ -170,7 +170,7 @@
       - section4.2.2.5
 
   - name: 4.2.3 Ensure rsyslog or syslog-ng is installed (Scored)
-    debug: "*** Will do it later"
+    debug: msg="*** Will do it later"
     when: syslog_ng_check.rc == 0
     tags:
       - scored
@@ -179,14 +179,14 @@
 
   - name: 4.2.4 Ensure permissions on all logfiles are configured (Scored)
 #    shell: find /var/log -type f -exec chmod g-wx,o-rwx {} +
-    debug: "*** Be careful with Production system. "
+    debug: msg="*** Be careful with Production system. "
     tags:
       - scored
       - section4.2
       - section4.2.4
 
   - name: 4.3 Ensure logrotate is configured (Not Scored)
-    debug: "*** Will do it later"
+    debug: msg="*** Will do it later"
     tags:
       - notscored
       - section4.3

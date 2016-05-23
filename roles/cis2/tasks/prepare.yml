@@ -15,21 +15,6 @@
 #   limitations under the License.
 #
 
-  - name: Clean up old scripts
-    file: path=/tmp/cis_scripts state=absent
-    tags:
-      - prepare
-
-  - name: Create the scripts folder
-    file: path=/tmp/cis_scripts/v2.0 state=directory mode=0755
-    tags:
-      - prepare
-
-  - name: Transfer the scripts
-    copy: src=files/cis_scripts dest=/tmp/ directory_mode=yes mode=755
-    tags:
-      - prepare
-  
   - name: Backup the files changes in /etc/ 
     shell: > 
       for i in 

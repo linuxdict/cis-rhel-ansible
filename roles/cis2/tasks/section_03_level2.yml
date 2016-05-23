@@ -15,12 +15,4 @@
 #   limitations under the License.
 #
 
-  - include: section_09_level1.yml
-    tags:
-      - section9
-      - level1
-
-  - include: section_09_level2.yml
-    tags:
-      - section9
-      - level2
+# CIS Section 3 has no Level 2 checks
