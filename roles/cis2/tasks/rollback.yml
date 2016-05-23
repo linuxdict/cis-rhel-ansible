@@ -16,7 +16,7 @@
 #
 
   - name: Clean up harden scripts
-    file: path=/tmp/cis_scripts state=absent
+    file: path=/opt/cis_scripts state=absent
     tags:
       - rollback
 
@@ -30,6 +30,7 @@
       pam.d/su hosts.allow hosts.deny rsyslog.conf login.defs
       motd issue issue.net ;
       do cp /etc/$i.preHarden /etc/$i ;done
+    notify: Reload sshd
     tags:
       - rollback
 

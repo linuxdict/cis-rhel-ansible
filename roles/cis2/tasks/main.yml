@@ -16,26 +16,33 @@
 #
 
   - include: prepare.yml
+    when: backup == "yes"
     tags: prepare
 
   - include: section_01.yml
+    when: rollback != "yes"
     tags: section1
 
   - include: section_02.yml
+    when: rollback != "yes"
     tags: section2
 
   - include: section_03.yml
+    when: rollback != "yes"
     tags: section3
 
   - include: section_04.yml
+    when: rollback != "yes"
     tags: section4
 
   - include: section_05.yml
+    when: rollback != "yes"
     tags: section5
 
   - include: section_06.yml
+    when: rollback != "yes"
     tags: section6
 
   - include: rollback.yml
-    when: rollback 
+    when: rollback == "yes"
     tags: rollback

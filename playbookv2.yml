@@ -15,12 +15,26 @@
 #   limitations under the License.
 #
 
+# example: 
+# Just run the check
+# ansible-playbook -i hosts playbookv2.yml -s -C -e "backup=yes"
+
+#  Run the fix
+# ansible-playbook -i hosts playbookv2.yml -s -e "backup=yes"
+
+# Backup the conf
+# ansible-playbook -i hosts playbookv2.yml -s -e "backup=yes"
+
+# Rollback the conf
+# ansible-playbook -i hosts playbookv2.yml -s -e "rollback=yes"
+
 - hosts: all
 #  accelerate: true
   user: centos
   vars: 
     default_auid: 1000
     company_name: Linuxdict
+    backup: yes
     rollback: no
   roles:
     - cis2

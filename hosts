@@ -1,4 +1,4 @@
 [targets]
 #localhost       ansible_connection=local
-10.1.1.102 ansible_connection=ssh
+10.1.1.216 ansible_connection=ssh
 #10.1.1.204 ansible_connection=ssh ansible_user=ec2-user

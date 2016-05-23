@@ -312,7 +312,7 @@
       group=root
       mode=0400
       state=touch
-#    ignore_errors: yes
+    ignore_errors: yes
     tags:
       - scored
       - section1.4
@@ -399,6 +399,7 @@
       - motd
       - issue
       - issue.net
+    when: ansible_distribution == "RedHat"
     tags:
       - scored
       - section1.7
@@ -412,6 +413,7 @@
       owner=root
       group=root
       mode=0644
+    when: ansible_distribution == "RedHat"
     with_items:
       - motd
       - issue
