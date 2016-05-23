@@ -80,6 +80,18 @@
       - section5.2.1
       - section5.2.1.3
 
+  - name: 5.2.2 Create audit log path (Scored)
+    file: >
+      path=/var/log/audit
+      state=directory
+      owner=root
+      group=wheel
+      mode=0640
+    tags:
+      - scored
+      - section5.2
+      - section5.2.2
+
   - name: 5.2.2 Enable auditd Service (Scored)
     service: >
       name=auditd
