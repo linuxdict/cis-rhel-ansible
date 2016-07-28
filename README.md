@@ -51,6 +51,7 @@ Install Ansible:
     yum install -y ansible
 
 Run it:
+
     cd cis-rhel-ansible/
     vi hosts # update your hosts list
     cat playbookv2.yml # for details
