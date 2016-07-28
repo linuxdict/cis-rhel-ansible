@@ -39,6 +39,27 @@ If you're ***really really*** ready to apply changes, run it in regular mode:
 
     ansible-playbook -i hosts playbookv2.yml
 
+#### Quick Start with Version2:
+
+Get the playbook:
+
+    git clone https://github.com/linuxdict/cis-rhel-ansible.git
+
+Install Ansible:
+
+    yum install epel-release -y
+    yum install -y ansible
+
+Run it:
+    cd cis-rhel-ansible/
+    vi hosts # update your hosts list
+    cat playbookv2.yml # for details
+    ansible-playbook -s -i hosts playbookv2.yml -e "backup=yes"
+
+Rollback:
+
+    ansible-playbook -s -i hosts playbookv2.yml -e "rollback=yes"
+
 #### Advanced options
 
 Tags are available for running a section at a time:
