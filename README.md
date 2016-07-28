@@ -1,10 +1,8 @@
-## Ansible + CIS Benchmarks + RHEL/CentOS 6
+## Ansible + CIS Benchmarks + RHEL/CentOS 6 & 7
 
 [![Build Status](https://travis-ci.org/major/cis-rhel-ansible.svg?branch=master)](https://travis-ci.org/major/cis-rhel-ansible)
 
-This is an ansible playbook for automatically applying CIS Security Benchmarks to a system running Red Hat Enterprise Linux 6 or CentOS 6.
-
-_RHEL 7 and CentOS 7 bencharks are coming soon._
+This is an ansible playbook for automatically applying CIS Security Benchmarks to a system running Red Hat Enterprise Linux 6 or CentOS 6,  RHEL 7 or CentOS 7 
 
 ### What are these benchmarks?
 The [Center for Internet Security](http://www.cisecurity.org/) publishes [security benchmarks](http://benchmarks.cisecurity.org/) for various systems.  Refer to the CIS site as the authoritative site for anything regarding these benchmarks.  You can join their community and contribute to the security benchmarks project.
@@ -32,6 +30,14 @@ Perform a dry run first:
 If you're ***really really*** ready to apply changes, run it in regular mode:
 
     ansible-playbook -i hosts playbook.yml
+
+Perform a dry run with Version2, https://benchmarks.cisecurity.org/tools2/linux/CIS_CentOS_Linux_7_Benchmark_v2.0.0.pdf
+
+    ansible-playbook -i hosts -C playbookv2.yml
+
+If you're ***really really*** ready to apply changes, run it in regular mode:
+
+    ansible-playbook -i hosts playbookv2.yml
 
 #### Advanced options
 
